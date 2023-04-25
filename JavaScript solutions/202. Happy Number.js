@@ -1,3 +1,4 @@
+//Approach : 1
 /**
  * @param {number} n
  * @return {boolean}
@@ -19,4 +20,23 @@ var isHappy = function (n) {
     fast = next(next(fast));
   }
   return fast === 1;
+};
+
+//approach : 2
+/**
+ * @param {number} n
+ * @return {boolean}
+ */
+var isHappy = function (n) {
+  const checked = [];
+  while (n !== 1) {
+    if (checked.includes(n)) return false;
+    checked.push(n);
+    n = n
+      .toString()
+      .split("")
+      .map((i) => i ** 2)
+      .reduce((sum, i) => sum + i, 0);
+  }
+  return true;
 };
