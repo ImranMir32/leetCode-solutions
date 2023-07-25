@@ -1,3 +1,4 @@
+// approach :1
 /**
  * @param {number[]} nums
  * @return {number[][]}
@@ -28,4 +29,30 @@ var findMatrix = function (nums) {
   }
 
   return v;
+};
+
+// approach :2
+
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var findMatrix = function (nums) {
+  const sortedNums = nums.slice().sort((a, b) => b - a);
+  const result = [];
+
+  for (const num of sortedNums) {
+    let added = false;
+    for (const row of result) {
+      if (!row.includes(num)) {
+        row.push(num);
+        added = true;
+        break;
+      }
+    }
+    if (!added) {
+      result.push([num]);
+    }
+  }
+  return result;
 };
