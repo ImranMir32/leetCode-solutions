@@ -1,62 +1,64 @@
-// Approach : 1
+// Approach : top-down
+// Time Complexcity : O(n)
+// Space Complexcity : O(n) + O(n);
 class Solution {
 public:
-    int dp[1007];
-    int dp_func(vector<int>& cost, int i){
-        if(i < 0 ) return 0;
-        if(i == 0) return cost[i];
-        if(i == 1) return cost[i];
-        if(dp[i] != -1) return dp[i];
-        
-        int cnt = INT_MAX;
-        cnt = min(cnt, cost[i] + dp_func(cost, i-1));
-        cnt = min(cnt, cost[i] + dp_func(cost, i-2));
+    int helper(vector<int>& cost, int n, vector<int>& dp){
+        if(n == 0) return cost[0];
+        if(n == 1) return cost[1];
+        if(dp[n] != -1) return dp[n];
 
-        return dp[i] = cnt;
+        dp[n] = cost[n] + min(helper(cost, n-1, dp), helper(cost, n-2, dp));
+        return dp[n];
     }
-
-
     int minCostClimbingStairs(vector<int>& cost) {
         int n = cost.size();
-        memset(dp, -1, sizeof(dp));
+        vector<int>dp(n+1, -1);
+        dp[n] = min(helper(cost, n-1, dp), helper(cost, n-2, dp));
+        return dp[n];
+    }
+};
+
+
+// Approach : bottom up
+// Time Complexcity : O(n)
+// Space Complexcity : O(n)
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int n = cost.size();
+        vector<int>dp(n+1, -1);
         dp[0] = cost[0];
         dp[1] = cost[1];
-        dp_func(cost, n-1);
-        return min(dp[n-1], dp[n-2]);
 
-        // int cost_last = dp_func(cost, n - 1);
-        // int cost_second_last = dp_func(cost, n - 2);
-        // return min(cost_last, cost_second_last);
+        for(int i=2; i<n; i++){
+            dp[i] = cost[i] + min(dp[i-1], dp[i-2]);
+        }
+
+        return min(dp[n-1], dp[n-2]);
     }
 };
 
-// Approach : 2
+
+
+// Approach : Space Optimized
+// Time Complexcity : O(n)
+// Space Complexcity : O(1)
 class Solution {
 public:
-    int dp[1007];
-    int dp_func(vector<int>& cost, int i){
-        if(i < 0 ) return 0;
-        if(i == 0) return cost[i];
-        if(i == 1) return cost[i];
-        if(dp[i] != -1) return dp[i];
-        
-        int cnt = INT_MAX;
-        cnt = min(cnt, cost[i] + dp_func(cost, i-1));
-        cnt = min(cnt, cost[i] + dp_func(cost, i-2));
-
-        return dp[i] = cnt;
-    }
     int minCostClimbingStairs(vector<int>& cost) {
         int n = cost.size();
-        memset(dp, -1, sizeof(dp));
-         int cost_last = dp_func(cost, n - 1);
-        int cost_second_last = dp_func(cost, n - 2);
-        return min(cost_last, cost_second_last);
+        int prev2 = cost[0];
+        int prev1 = cost[1];
 
+        for(int i=2; i<n; i++){
+            int curr = cost[i] + min(prev1, prev2);
+            prev2 = prev1;
+            prev1 = curr;
+        }
 
-        //dp[0] = cost[0];
-        //dp[1] = cost[1];
-        //dp_func(cost, n-1);
-        //return min(dp[n-1], dp[n-2]);
+        return min(prev1, prev2);
     }
 };
+
+
